@@ -51,8 +51,7 @@ Aplicação web desenvolvida em **Python (Flask)** para gerenciamento de finanç
 * Gabriel Soldi
 * Gabriel Gadens
 * Lucas Sperafico
-* Petterson
-
+* Pettersom Polonio
 ---
 
 ## 🧾 Observação
