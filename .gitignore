@@ -1,0 +1,31 @@
+# Ambiente virtual
+venv/
+
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Banco de dados local (não versionar dados)
+instance/*.db
+*.sqlite3
+
+# Arquivos temporários e de backup
+*.log
+*.tmp
+*.bak
+
+# Configurações do VSCode e outros IDEs
+.vscode/
+.idea/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de ambiente (caso crie)
+.env
+
+# Arquivos gerados por Flask
+*.pid
