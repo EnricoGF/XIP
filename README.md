@@ -1,16 +1,58 @@
-# React + Vite
+# XIP
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web de finanças pessoais desenvolvida com React e Vite. O projeto usa Firebase para autenticação e armazenamento de dados.
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js 20.19+ ou 22.12+
+- npm
+- Um projeto Firebase com Authentication e Firestore configurados
 
-## React Compiler
+## Configuração
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone o repositório e entre na pasta do projeto:
 
-## Expanding the ESLint configuration
+   ```bash
+   git clone https://github.com/EnricoGF/XIP.git
+   cd XIP
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. Instale as dependências:
+
+   ```bash
+   npm install
+   ```
+
+3. Confira a configuração do Firebase em `src/services/firebase.js`. O arquivo contém a configuração web usada pela aplicação. Para conectar outro projeto Firebase, atualize esses valores com os dados do seu projeto.
+4. No Firebase Console, habilite o provedor Google em **Authentication** e configure os domínios autorizados para incluir `localhost`.
+5. Crie ou selecione um banco de dados no **Cloud Firestore**.
+
+## Executar em desenvolvimento
+
+Inicie o servidor local:
+
+```bash
+npm run dev
+```
+
+Abra [http://localhost:4173](http://localhost:4173) no navegador. O servidor está configurado para usar essa porta e falhar caso ela já esteja ocupada.
+
+## Verificações e build
+
+Para executar o linter:
+
+```bash
+npm run lint
+```
+
+Para gerar a versão de produção:
+
+```bash
+npm run build
+```
+
+Os arquivos gerados ficam na pasta `dist/`. Para servir o build localmente:
+
+```bash
+npm run preview
+```
