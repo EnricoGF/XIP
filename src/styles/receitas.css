@@ -1,0 +1,151 @@
+.receitas-page {
+  padding: 30px;
+}
+
+.receitas-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 500px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  margin-bottom: 30px;
+}
+
+.receitas-card h3 {
+  margin-bottom: 20px;
+}
+
+.finance-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.finance-date-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.finance-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  opacity: .9;
+}
+
+.btn-secondary {
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #334155;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.receitas-list {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+.receita-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.total-receitas {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.receita-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.receita-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.finance-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.finance-item-info small {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.btn-edit,
+.btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn-edit {
+  color: #2563eb;
+}
+
+.btn-delete {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.btn-delete:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+  .receitas-page {
+    padding: 16px;
+  }
+
+  .receitas-card,
+  .receitas-list {
+    padding: 18px;
+  }
+
+  .receita-item {
+    gap: 12px;
+  }
+
+  .receita-actions {
+    gap: 6px;
+  }
+}

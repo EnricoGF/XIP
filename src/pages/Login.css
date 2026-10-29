@@ -1,0 +1,188 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login-container {
+  min-height: 100vh;
+
+  display: flex;
+
+  background-image: url("../assets/login-bg.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.login-left {
+  flex: 1;
+
+  padding: 60px 80px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  color: white;
+}
+
+.brand h1 {
+  font-size: 90px;
+  font-weight: 800;
+}
+
+.brand span {
+  font-size: 18px;
+  opacity: .9;
+}
+
+.hero-text {
+  margin-top: 60px;
+}
+
+.hero-text h2 {
+  color: white;
+}
+
+.hero-text span {
+  color: #4ade80;
+}
+
+.hero-image {
+  display: flex;
+  justify-content: center;
+  margin: 50px 0;
+}
+
+.hero-image img {
+  width: 100%;
+  max-width: 500px;
+  object-fit: contain;
+}
+
+.features {
+  display: flex;
+  gap: 50px;
+
+  margin-top: 450px;
+}
+
+.features p {
+  color: white;
+}
+
+.features div {
+  text-align: center;
+}
+
+
+.login-right {
+  width: 600px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 40px;
+}
+
+.login-card {
+  width: 100%;
+
+  background: white;
+
+  border-radius: 30px;
+
+  padding: 60px;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,.15);
+
+  text-align: center;
+}
+
+.card-logo {
+  width: 120px;
+  height: 120px;
+
+  margin: 0 auto 30px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card h2 {
+  font-size: 42px;
+
+  margin-bottom: 20px;
+
+  color: #0f172a;
+}
+
+.login-card p {
+  color: #64748b;
+
+  margin-bottom: 40px;
+
+  line-height: 1.6;
+}
+
+.google-btn {
+  width: 100%;
+
+  padding: 18px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: .3s;
+}
+
+.google-btn:hover {
+  background: #1d4ed8;
+}
+
+.logo-principal {
+  width: 350px;
+  height: auto;
+
+}
+.card-logo img {
+  width: 100%;
+}
+
+
+.hero-icon {
+  font-size: 110px;
+
+  color: #4ade80;
+
+  filter: drop-shadow(
+    0 10px 25px rgba(74, 222, 128, 0.25)
+  );
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.feature-icon {
+  font-size: 28px;
+
+  color: #4ade80;
+
+  margin-bottom: 10px;
+}
