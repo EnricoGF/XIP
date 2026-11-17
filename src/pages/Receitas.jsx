@@ -251,7 +251,7 @@ function Receitas() {
         </div>
 
         <div className="receitas-list">
-          <div className="total-receitas">
+          <div className="finance-total">
             Total: R$ {totalReceitas.toFixed(2)}
           </div>
 
