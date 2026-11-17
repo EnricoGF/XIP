@@ -24,7 +24,7 @@ Aplicação web de finanças pessoais desenvolvida com React e Vite. O projeto u
    ```
 
 3. Confira a configuração do Firebase em `src/services/firebase.js`. O arquivo contém a configuração web usada pela aplicação. Para conectar outro projeto Firebase, atualize esses valores com os dados do seu projeto.
-4. No Firebase Console, habilite o provedor Google em **Authentication** e configure os domínios autorizados para incluir `localhost`.
+4. No Firebase Console, habilite o provedor Google em **Authentication** e configure os domínios autorizados para incluir `localhost`. Acesse a aplicação por `http://localhost:4173`; o endereço IPv6 `[::1]` não é autorizado automaticamente.
 5. Crie ou selecione um banco de dados no **Cloud Firestore**.
 
 ## Executar em desenvolvimento

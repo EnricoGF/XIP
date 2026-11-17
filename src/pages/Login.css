@@ -153,6 +153,21 @@
   background: #1d4ed8;
 }
 
+.google-btn:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
+.login-card .login-error {
+  margin: -20px 0 24px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+  text-align: left;
+}
+
 .logo-principal {
   width: 350px;
   height: auto;

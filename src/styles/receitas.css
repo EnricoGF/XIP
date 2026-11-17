@@ -15,12 +15,14 @@
   margin-bottom: 20px;
 }
 
-.finance-form input {
+.finance-form input,
+.finance-form select {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  background: white;
 }
 
 .finance-date-label {
@@ -34,6 +36,62 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.category-manager {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.category-manager h4 {
+  margin-bottom: 12px;
+  color: #334155;
+}
+
+.category-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-form input {
+  flex: 1 1 180px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.category-empty {
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.finance-error {
+  margin-top: 16px;
+  color: #b91c1c;
+  font-size: 14px;
 }
 
 .btn-primary {

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaHome, FaMoneyBillWave, FaReceipt, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaBullseye, FaMoneyBillWave, FaReceipt, FaSignOutAlt } from "react-icons/fa";
 import { signOut } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,10 @@ const handleLogout = async () => {
       <nav>
         <NavLink to="/dashboard">
           <FaHome /> Dashboard
+        </NavLink>
+
+        <NavLink to="/metas">
+          <FaBullseye /> Metas
         </NavLink>
 
         <NavLink to="/receitas">

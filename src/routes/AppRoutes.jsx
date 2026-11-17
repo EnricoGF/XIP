@@ -5,6 +5,7 @@ import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Receitas from "../pages/Receitas";
 import Despesas from "../pages/Despesas";
+import Metas from "../pages/Metas";
 
 function AppRoutes() {
   return (
@@ -23,6 +24,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/metas"
+          element={
+            <ProtectedRoute>
+              <Metas />
             </ProtectedRoute>
           }
         />

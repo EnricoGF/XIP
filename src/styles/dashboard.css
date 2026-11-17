@@ -53,6 +53,12 @@
   margin: 8px 0 15px;
 }
 
+.movement-section-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
 .movement-sort-control,
 .movement-date-filters label {
   display: flex;
@@ -74,8 +80,16 @@
 }
 
 .movement-sort-control select {
-  max-width: 190px;
+  max-width: 210px;
   padding: 0 8px;
+}
+
+.dashboard-movement-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
 }
 
 .movement-date-filters {
@@ -237,6 +251,11 @@
   .movement-sort-control select {
     width: 100%;
     max-width: none;
+  }
+
+  .movement-section-controls {
+    width: 100%;
+    flex-direction: column;
   }
 
   .movement-date-filters {

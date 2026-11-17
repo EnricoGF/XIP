@@ -1,21 +1,34 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { ensureCategoryTypes } from "../utils/categoryMigration";
 import MainLayout from "../layouts/MainLayout";
 import FinanceChart from "../components/FinanceChart";
 import { formatFinanceDate, getFinanceDate } from "../utils/financeDate";
 
-function MovementSection({ title, records, emptyMessage }) {
+function MovementSection({
+  title,
+  records,
+  categories,
+  selectedCategory,
+  onCategoryChange,
+  emptyMessage,
+}) {
   const [sortBy, setSortBy] = useState("date-desc");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const hasDateFilter = Boolean(dateFrom || dateTo);
+  const hasFilters = Boolean(dateFrom || dateTo || selectedCategory);
 
   const visibleRecords = [...records]
     .filter((record) => {
       const date = getFinanceDate(record);
-      return (!dateFrom || date >= dateFrom) && (!dateTo || date <= dateTo);
+      const matchesCategory = !selectedCategory
+        || (selectedCategory === "__uncategorized" && !record.categoriaId)
+        || record.categoriaId === selectedCategory;
+      return (!dateFrom || date >= dateFrom)
+        && (!dateTo || date <= dateTo)
+        && matchesCategory;
     })
     .sort((left, right) => {
       if (sortBy === "value-desc") return Number(right.valor) - Number(left.valor);
@@ -27,21 +40,36 @@ function MovementSection({ title, records, emptyMessage }) {
         ? leftDate.localeCompare(rightDate)
         : rightDate.localeCompare(leftDate);
     });
-  const displayedRecords = hasDateFilter ? visibleRecords : visibleRecords.slice(0, 5);
+  const displayedRecords = hasFilters ? visibleRecords : visibleRecords.slice(0, 5);
 
   return (
     <section className="dashboard-section">
       <div className="dashboard-section-heading">
         <h3>{title}</h3>
-        <label className="movement-sort-control">
-          <span>Ordenar</span>
-          <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
-            <option value="date-desc">Data: mais recente</option>
-            <option value="date-asc">Data: mais antiga</option>
-            <option value="value-desc">Valor: maior</option>
-            <option value="value-asc">Valor: menor</option>
-          </select>
-        </label>
+        <div className="movement-section-controls">
+          <label className="movement-sort-control">
+            <span>Categoria</span>
+            <select
+              value={selectedCategory}
+              onChange={(event) => onCategoryChange(event.target.value)}
+            >
+              <option value="">Todas</option>
+              <option value="__uncategorized">Sem categoria</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>{category.nome}</option>
+              ))}
+            </select>
+          </label>
+          <label className="movement-sort-control">
+            <span>Ordenar</span>
+            <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+              <option value="date-desc">Data: mais recente</option>
+              <option value="date-asc">Data: mais antiga</option>
+              <option value="value-desc">Valor: maior</option>
+              <option value="value-asc">Valor: menor</option>
+            </select>
+          </label>
+        </div>
       </div>
 
       <div className="movement-date-filters">
@@ -65,13 +93,14 @@ function MovementSection({ title, records, emptyMessage }) {
             onChange={(event) => setDateTo(event.target.value)}
           />
         </label>
-        {hasDateFilter && (
+        {hasFilters && (
           <button
             className="movement-filter-clear"
             type="button"
             onClick={() => {
               setDateFrom("");
               setDateTo("");
+              onCategoryChange("");
             }}
           >
             Limpar
@@ -82,20 +111,27 @@ function MovementSection({ title, records, emptyMessage }) {
       {records.length === 0 ? (
         <p>{emptyMessage}</p>
       ) : displayedRecords.length === 0 ? (
-        <p className="movement-no-results">Nenhuma movimentação nesse período.</p>
+        <p className="movement-no-results">Nenhuma movimentação encontrada com esses filtros.</p>
       ) : (
         <>
           {displayedRecords.map((record) => (
             <div key={record.id} className="movimentacao-item">
-              <span>{record.descricao}</span>
+              <div className="dashboard-movement-info">
+                <span>{record.descricao}</span>
+                {record.categoriaId && categories.some((category) => category.id === record.categoriaId) && (
+                  <span className="category-tag">
+                    {categories.find((category) => category.id === record.categoriaId).nome}
+                  </span>
+                )}
+              </div>
               <div className="dashboard-movement-details">
                 <small>{formatFinanceDate(record)}</small>
                 <strong>R$ {Number(record.valor).toFixed(2)}</strong>
               </div>
             </div>
           ))}
-          {!hasDateFilter && records.length > 5 && (
-            <small className="movement-list-hint">Exibindo 5 de {records.length} movimentações</small>
+          {!hasFilters && visibleRecords.length > 5 && (
+            <small className="movement-list-hint">Exibindo 5 de {visibleRecords.length} movimentações</small>
           )}
         </>
       )}
@@ -106,62 +142,69 @@ function MovementSection({ title, records, emptyMessage }) {
 function Dashboard() {
   const { user } = useAuth();
 
-const [totalReceitas, setTotalReceitas] = useState(0);
-const [totalDespesas, setTotalDespesas] = useState(0);
 const [registrosReceitas, setRegistrosReceitas] = useState([]);
 const [registrosDespesas, setRegistrosDespesas] = useState([]);
-const carregarDados = async () => {
-  try {
-    const receitasQuery = query(
-      collection(db, "receitas"),
-      where("userId", "==", user.uid)
-    );
+const [categoriasReceitas, setCategoriasReceitas] = useState([]);
+const [categoriasDespesas, setCategoriasDespesas] = useState([]);
+const [categoriaReceitas, setCategoriaReceitas] = useState("");
+const [categoriaDespesas, setCategoriaDespesas] = useState("");
+const carregarDados = useCallback(async () => {
+  await ensureCategoryTypes(user.uid);
+  const receitasQuery = query(
+    collection(db, "receitas"),
+    where("userId", "==", user.uid)
+  );
+  const despesasQuery = query(
+    collection(db, "despesas"),
+    where("userId", "==", user.uid)
+  );
+  const categoriasQuery = query(
+    collection(db, "categorias"),
+    where("userId", "==", user.uid)
+  );
 
-    const despesasQuery = query(
-      collection(db, "despesas"),
-      where("userId", "==", user.uid)
-    );
+  const [receitasSnapshot, despesasSnapshot, categoriasSnapshot] = await Promise.all([
+    getDocs(receitasQuery),
+    getDocs(despesasQuery),
+    getDocs(categoriasQuery),
+  ]);
+  setRegistrosReceitas(receitasSnapshot.docs.map((financeDoc) => ({
+    id: financeDoc.id,
+    ...financeDoc.data(),
+  })));
+  setRegistrosDespesas(despesasSnapshot.docs.map((financeDoc) => ({
+    id: financeDoc.id,
+    ...financeDoc.data(),
+  })));
+  const categories = categoriasSnapshot.docs.map((categoryDoc) => ({
+    id: categoryDoc.id,
+    ...categoryDoc.data(),
+  }));
+  setCategoriasReceitas(categories
+    .filter((category) => category.tipo === "receita")
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")));
+  setCategoriasDespesas(categories
+    .filter((category) => category.tipo === "despesa")
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")));
+}, [user]);
 
-    const receitasSnapshot = await getDocs(receitasQuery);
-    const despesasSnapshot = await getDocs(despesasQuery);
-    const receitasLista = [];
-const despesasLista = [];
-
-    let receitas = 0;
-    let despesas = 0;
-
-    receitasSnapshot.forEach((doc) => {
-  receitas += doc.data().valor;
-
-  receitasLista.push({
-    id: doc.id,
-    ...doc.data(),
-  });
-});
-
-    despesasSnapshot.forEach((doc) => {
-  despesas += doc.data().valor;
-
-  despesasLista.push({
-    id: doc.id,
-    ...doc.data(),
-  });
-});
-
-    setTotalReceitas(receitas);
-    setTotalDespesas(despesas);
-    setRegistrosReceitas(receitasLista);
-    setRegistrosDespesas(despesasLista);
-
-  } catch (error) {
-    console.error(error);
-  }
-};
 useEffect(() => {
   if (user) {
-    carregarDados();
+    Promise.resolve()
+      .then(carregarDados)
+      .catch((error) => console.error("Erro ao carregar dados do dashboard:", error));
   }
-}, [user]);
+}, [user, carregarDados]);
+
+const filtrarPorCategoria = (records, categoryId) => records.filter((record) => {
+  if (!categoryId) return true;
+  if (categoryId === "__uncategorized") return !record.categoriaId;
+  return record.categoriaId === categoryId;
+});
+const receitasFiltradas = filtrarPorCategoria(registrosReceitas, categoriaReceitas);
+const despesasFiltradas = filtrarPorCategoria(registrosDespesas, categoriaDespesas);
+const totalReceitas = receitasFiltradas.reduce((total, receita) => total + (Number(receita.valor) || 0), 0);
+const totalDespesas = despesasFiltradas.reduce((total, despesa) => total + (Number(despesa.valor) || 0), 0);
 const saldoAtual = totalReceitas - totalDespesas;
   return (
     <MainLayout title="Dashboard">
@@ -192,18 +235,24 @@ const saldoAtual = totalReceitas - totalDespesas;
       <FinanceChart
   receitas={totalReceitas}
   despesas={totalDespesas}
-  registrosReceitas={registrosReceitas}
-  registrosDespesas={registrosDespesas}
+  registrosReceitas={receitasFiltradas}
+  registrosDespesas={despesasFiltradas}
 />
       <div className="dashboard-lists">
         <MovementSection
           title="Últimas Receitas"
           records={registrosReceitas}
+          categories={categoriasReceitas}
+          selectedCategory={categoriaReceitas}
+          onCategoryChange={setCategoriaReceitas}
           emptyMessage="Nenhuma receita cadastrada."
         />
         <MovementSection
           title="Últimas Despesas"
           records={registrosDespesas}
+          categories={categoriasDespesas}
+          selectedCategory={categoriaDespesas}
+          onCategoryChange={setCategoriaDespesas}
           emptyMessage="Nenhuma despesa cadastrada."
         />
       </div>
